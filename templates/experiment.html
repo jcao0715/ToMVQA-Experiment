@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block script_loads %}
+    <script src="{{ url_for('static', filename='jspsych/jspsych.js') }}"></script>
+    <script src="{{ url_for('static', filename='jspsych/plugin-html-button-response.js') }}"></script>
+    <script src="{{ url_for('static', filename='jspsych/plugin-preload.js') }}"></script>
+    <script src="{{ url_for('static', filename='jspsych/plugin-call-function.js') }}"></script>
+    <script src="{{ url_for('static', filename='jspsych/plugin-html-keyboard-response.js') }}"></script>
+    <script src="{{ url_for('static', filename='jspsych/plugin-video-button-response.js') }}"></script>
+    {% for plugin in plugins %}
+        <script src="{{ url_for('static', filename='jspsych/' ~ plugin ~ '.js') }}"></script>
+    {% endfor %}
+    {% for addscr in additional_scripts %}
+        <script src="{{ url_for('static', filename='js/' ~ addscr ~ '.js') }}"></script>
+    {% endfor %}
+    <!-- Load in the important variables -->
+    <script>
+        const staticBaseUrl = "{{ url_for('static', filename='') }}"
+        const id = "{{id}}"
+        const endurl = "{{ url_for('end_exp') }}"
+        const condition = "{{condition}}"
+        const counterbalance = "{{counterbalance}}"
+    </script>
+    <script src="{{ url_for('static', filename='js/default_utils.js') }}"></script>
+{% endblock %} 
+
+{% block title %}{{exp_display}}{% endblock %}
+
+{% block content %}
+    {% if exp_html %}
+        {% include 'experiment_html/' ~ exp_html ~ '.html' %}
+    {% endif %}
+{% endblock %}
+        
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/' ~ exp_script ~ '.js') }}"></script>
+{% endblock %}

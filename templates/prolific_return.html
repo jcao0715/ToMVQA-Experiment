@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block script_loads %}
+    <script src="{{ url_for('static', filename='jspsych/jspsych.js') }}"></script>
+    <script src="{{ url_for('static', filename='jspsych/plugin-html-keyboard-response.js') }}"></script>
+    <script src="{{ url_for('static', filename='jspsych/plugin-preload.js') }}"></script>
+{% endblock %}
+
+{% block title %}All done!{% endblock %}
+
+{% block extra_js %}
+<script>
+    var jsPsych = initJsPsych()
+    var donestim = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `
+        <h1>Congrats! You're all done!</h1>
+        <p>Thank you for your participation!></p>
+        <p><a href="{{reflink}}">Click here to return to Prolific and complete the study</a></p>`,
+        choices: 'NO_KEYS'   
+    }
+    var timeline = [donestim]
+    jsPsych.run(timeline)
+
+</script>
+{% endblock %}

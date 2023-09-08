@@ -1,0 +1,12 @@
+{
+    "example_exp": {
+        "exp_display_name": "Example Experiment",
+        "exp_internal_name": "example",
+        "exp_script": "example_experiment",
+        "num_conditions": 1,
+        "num_counterbalance": 1,
+        "plugins": ["plugin-html-keyboard-response",
+                    "plugin-image-keyboard-response",
+                    "plugin-video-keyboard-response"]
+    }
+}

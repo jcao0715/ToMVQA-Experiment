@@ -1,12 +1,14 @@
 {
-    "example_exp": {
+    "tomvqa_exp": {
         "exp_display_name": "Example Experiment",
         "exp_internal_name": "example",
-        "exp_script": "example_experiment",
+        "exp_script": "tomvqa_experiment",
         "num_conditions": 1,
         "num_counterbalance": 1,
         "plugins": ["plugin-html-keyboard-response",
                     "plugin-image-keyboard-response",
-                    "plugin-video-keyboard-response"]
+                    "plugin-video-keyboard-response",
+                    "plugin-html-button-response",
+                    "plugin-video-button-response"]
     }
 }

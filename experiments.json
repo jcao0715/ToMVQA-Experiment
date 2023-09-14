@@ -9,6 +9,7 @@
                     "plugin-image-keyboard-response",
                     "plugin-video-keyboard-response",
                     "plugin-html-button-response",
-                    "plugin-video-button-response"]
+                    "plugin-video-button-response",
+                    "plugin-survey-text"]
     }
 }

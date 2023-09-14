@@ -10,7 +10,7 @@ async function makeConsent() {
         <h1>Consent Form</h1>
         ${consentContent}
       `,
-      choices: ['I Consent'],
+      choices: ['I Agree'],
       data: {type: 'consent'}
     };
   

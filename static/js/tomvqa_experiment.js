@@ -165,6 +165,7 @@ async function initializeTimeline() {
     data: {type: 'comprehension3'}
   };
 
+  var showComprehensionIncorrect = false;
   /* Feedback page for incorrect comprehension answers */
   var comprehensionIncorrect = {
     type: jsPsychHtmlButtonResponse,
@@ -246,40 +247,81 @@ async function initializeTimeline() {
       correct_response: 'a',
       data: {type: 'trial2'}
     };
+    
+    
 
-    /* if not all comprehension questions answered correctly */
-  var comprehensionCheck = {
-    timeline: [comprehension1, comprehension2, comprehension3],
-    loop_function: function(data) {
-      var responses = data.values();
-      console.log(responses);
-      var allCorrect = true;
+    // var comprehensionTimeline = {
+    //   timeline: [comprehension1, comprehension2, comprehension3],
+    //   loop_function: function(data) {
+    //     var responses = data.values();
+    //     var allCorrect = true;
+    
+    //     if (responses[0].response != 1) {
+    //         allCorrect = false;
+    //     }
+    //     if (responses[1].response != 2) {
+    //         allCorrect = false;
+    //     }
+    //     if (responses[2].response != 0) {
+    //         allCorrect = false;
+    //     }
+        
+    //     return !allCorrect;  // if not all correct, loop the timeline
+    //   },
+    // };
+    
+    // timeline.push(comprehensionTimeline);  // Add comprehensionTimeline to the main timeline
+    // timeline.push(comprehensionCorrect, trial1, trial2);
       
-      // Check if the response for comprehension1 is correct
-      if (responses[0].response != 1) {
-          allCorrect = false;
+    var comprehensionTrials = {
+      timeline: [comprehension1, comprehension2, comprehension3],
+      data: {type: 'comprehension'}
+    };
+    
+    var comprehensionFeedback = {
+      timeline: [comprehensionIncorrect],
+      conditional_function: function(){
+        var lastTrialsData = jsPsych.data.get().last(3).values();
+
+        if (lastTrialsData[0].response != 1 || lastTrialsData[1].response != 2 || lastTrialsData[2].response != 0) {
+          return true; // Show the incorrect feedback if any of the answers are wrong
+        } else {
+          return false; // Don't show the incorrect feedback
+        }
       }
-      
-      // Check if the response for comprehension2 is correct
-      if (responses[1].response != 2) {
-          allCorrect = false;
+    };
+    
+    var comprehensionSuccess = {
+      timeline: [comprehensionCorrect, trial1, trial2],
+      conditional_function: function(){
+        var lastTrialsData = jsPsych.data.get().last(3).values();
+        
+        if (lastTrialsData[0].response == 1 && lastTrialsData[1].response == 2 && lastTrialsData[2].response == 0) {
+          return true; // Show the success feedback if all answers are correct
+        } else {
+          return false; // Don't show the success feedback
+        }
       }
-      
-      // Check if the response for comprehension3 is correct
-      if (responses[2].response != 0) {
-          allCorrect = false;
+    };
+
+    var mainTimeline = {
+      timeline: [comprehensionTrials, comprehensionFeedback, comprehensionSuccess],
+      loop_function: function(data){
+        var lastTrialsData = data.values(); // get the last 3 trials, which are the comprehension questions
+        console.log(lastTrialsData);
+        // Check if any of the answers are incorrect
+        if (lastTrialsData[0].response != 1 || lastTrialsData[1].response != 2 || lastTrialsData[2].response != 0) {
+          console.log('incorrect');
+          return true; // Loop if any answer is incorrect
+        } else {
+          console.log('correct');
+          return false; // Don't loop if all answers are correct
+        }
       }
-      
-      if (!allCorrect) {
-        jsPsych.timeline.push(comprehensionIncorrect, function() {});
-      }
-  
-      return !allCorrect;  // if not all correct, loop the timeline
-  }
-  };
-  timeline.push(comprehensionCheck);
-  timeline.push(comprehensionCorrect, trial1, trial2);
-      
+    };
+
+    timeline.push(mainTimeline);
+    
 
   /* Add a "Begin Experiment" button trial */
   var beginExperiment = {

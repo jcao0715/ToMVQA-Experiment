@@ -1,11 +1,13 @@
 function toggleText(id) {
-    let element = document.getElementById(id);
-    if (element.style.display === 'none') {
-        element.style.display = 'block';
-    } else {
-        element.style.display = 'none';
-    }
+  // Hide all text sections
+  document.getElementById('stateText').style.display = 'none';
+  document.getElementById('actionText').style.display = 'none';
+  
+  // Show the specific section associated with the clicked button
+  let element = document.getElementById(id);
+  element.style.display = 'block';
 }
+
 
 function checkTime(video, time) {
   if (video.currentTime > time) {
@@ -58,7 +60,6 @@ async function initializeTimeline() {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
       <p>(Please view in full screen)</p>
-      <p>If you have already completed this experiment, please refrain from participating again.</p>
       <p>Welcome!</p>
       <p>In this experiment, you will watch video clips of a person trying to find an object in an apartment. At various points in the video, we will pause and ask you to answer questions about what the person is trying to find and where they think the object might be. You can watch the video clips as many times as you want. You can also watch the earlier part of the clip by hovering over the progress bar.</p>
       <b>Please note that the person may not know where things are in this apartment and may have to look for them sometimes.</b>
@@ -89,7 +90,7 @@ async function initializeTimeline() {
       </ul>
 
       <video id="test" width="500" controls ontimeupdate="checkTime(this, 15)">
-        <source src="http://visiongpu20.csail.mit.edu:9000/61new.mp4" type="video/mp4">
+        <source src="http://visiongpu20.csail.mit.edu:9000/video1100.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
 

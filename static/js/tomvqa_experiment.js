@@ -65,7 +65,7 @@ async function initializeTimeline() {
       <p>Thank you for your participation!</p>
 
       <video id="test" width="500" controls ontimeupdate="checkTime(this, 15)">
-        <source src="http://visiongpu20.csail.mit.edu:9000/61new.mp4" type="video/mp4">
+        <source src="http://visiongpu20.csail.mit.edu:9000/video1100.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
 
@@ -116,83 +116,170 @@ async function initializeTimeline() {
   var tryout = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
-    <p>After a short check to ensure that you have understood the instructions, you will have a chance to try out 1 example trial. </p>
-    <p>After the example trial, you will be able to start the experiment. </p>
-    `,
+      <p>After a short check to ensure that you have understood the instructions, you will have a chance to try out 1 example trial. </p>
+      <p>After the example trial, you will be able to start the experiment. </p>
+      `,
     choices: ['Continue'],
-    data: {type: 'trial instructions'}
+    data: { type: 'trial instructions' }
   };
-  timeline.push(tryout);
 
+  timeline.push(tryout);
 
   /* comprehension check trial */
   var comprehension1 = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
-    <p>What will you do in this experiment?</p>
-    <p>(a) Answer questions about where an object is located in an apartment. <br>
-    (b) Answer questions about what a person wants to get and where that object could be in that person's mind. <br>
-    (c) Describe a person's activity after watching a video. </p>
-    `,
+      <p>What will you do in this experiment?</p>
+      <p>(a) Answer questions about where an object is located in an apartment. <br>
+      (b) Answer questions about what a person wants to get and where that object could be in that person's mind. <br>
+      (c) Describe a person's activity after watching a video. </p>
+      `,
     choices: ['a', 'b', 'c'],
     correct_response: 'b',
     data: {type: 'comprehension1'}
   };
-  timeline.push(comprehension1);
 
   var comprehension2 = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
-    <p>If you want to know what objects are inside the microwave, what should you do?</p>
-    <p>(a) Make a guess. <br>
-    (b) Watch the video. <br>
-    (c) Click the "What's inside the apartment" button. </p>
-    `,
+      <p>If you want to know what objects are inside the microwave, what should you do?</p>
+      <p>(a) Make a guess. <br>
+      (b) Watch the video. <br>
+      (c) Click the "What's inside the apartment" button. </p>
+      `,
     choices: ['a', 'b', 'c'],
     correct_response: 'c',
     data: {type: 'comprehension2'}
   };
-  timeline.push(comprehension2);
 
   var comprehension3 = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
-    <p>Which one of the statements is incorrect? </p>
-    <p>(a) The person in the video always knows where an object actually is. <br>
-    (b) You can slide the progress bar to view previous sections of the video. <br>
-    (c) When you can't see the person clearly in the video, you can click the "Actions taken by [name]" button to see what they are doing. </p>
-    `,
+      <p>Which one of the statements is incorrect? </p>
+      <p>(a) The person in the video always knows where an object actually is. <br>
+      (b) You can slide the progress bar to view previous sections of the video. <br>
+      (c) When you can't see the person clearly in the video, you can click the "Actions taken by [name]" button to see what they are doing. </p>
+      `,
     choices: ['a', 'b', 'c'],
     correct_response: 'a',
     data: {type: 'comprehension3'}
   };
-  timeline.push(comprehension3);
 
-  /* if not all comprehension questions answered correctly */
-  var comprehensionCheck = {
-    timeline: [comprehension1, comprehension2, comprehension3],
-    loop_function: function(data) {
-      if (data.values()[0].correct === false || data.values()[1].correct === false || data.values()[2].correct === false) {
-        return true;
-      } else {
-        return false;
-      }
-    }
+  /* Feedback page for incorrect comprehension answers */
+  var comprehensionIncorrect = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `
+    <p>You didn't pass the quiz. Please read the instructions carefully again.</p>
+    `,
+    choices: ['Retry Comprehension Test'],
+    data: { type: 'comprehension_incorrect' }
   };
-  timeline.push(comprehensionCheck);
 
   /* if all comprehension questions answered correctly */
   var comprehensionCorrect = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
-    <p>Great! You have answered all the comprehension questions correctly. </p>
-    <p>Now, you will have a chance to try out 1 example trial. </p>
-    <p>After the example trial, you will be able to start the experiment. </p>
-    `,
+      <p>Great! You have answered all the comprehension questions correctly. </p>
+      <p>Now, you will have a chance to try out 1 example trial. </p>
+      <p>After the example trial, you will be able to start the experiment. </p>
+      `,
     choices: ['Continue'],
-    data: {type: 'comprehension_correct'}
+    data: { type: 'comprehension_correct' }
   };
 
+    /* video and question trial */
+    var trial1 = {
+      // episode: 61  question type: 1.1  answer: a
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `
+        <video id="test" width="500" controls ontimeupdate="checkTime(this, 13)">
+          <source src="http://visiongpu20.csail.mit.edu:9000/61new.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video> 
+  
+        <button onclick="setPositionAndPlay(0)" type="button"> Start video </button>
+        <br>
+          <button onclick="toggleText('stateText')">What's inside the apartment</button>
+          <button onclick="toggleText('actionText')">Actions taken by Mary</button>
+          <div id="stateText" style="display:none;">There is a bedroom, kitchen, bathroom, and living room. <br>
+          In the bedroom, there is a coffee table and a desk. A remote control is on the coffee table. <br>
+          The kitchen contains four cabinets, a fridge, a kitchen table, a stove, and a microwave. The third cabinet, from left to right, is empty. The fridge contains a dish bowl, two plates, and a bottle of wine. The fourth cabinet, from left to right, has a water glass. The stove holds a salmon, two cupcakes, and a plate. The second cabinet, from left to right, has a condiment bottle. The microwave has a cupcake. The first cabinet, from left to right, is empty. <br>
+          The bathroom has a bathroom cabinet, which is empty. <br>
+          The living room has a coffee table, cabinet, desk, and sofa. The coffee table has a wine glass and a book. The cabinet contains chips, an apple, a water glass, two plates, a bottle of wine, two wine glasses, a condiment bottle, and a remote control. </div>
+          <div id="actionText" style="display:none;">Mary is in the bathroom. She walks to the kitchen and heads towards the stove, preparing to open it. </div>
+        <br>
+        <p>If Mary has been trying to get a wine, which one of the following statements is more likely to be true?<br>
+        (a) Mary thinks that the wine is inside the stove. <br>
+        (b) Mary thinks that the wine is not inside the stove.
+        </p>
+      `,
+      choices: ['a', 'b'],
+      correct_response: 'a',
+      data: {type: 'trial1'}
+    };
+  
+    var trial2 = {
+      // episode: 61  question type: 1.2  answer: a
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `
+        <video id="test" width="500" controls ontimeupdate="checkTime(this,31)">
+          <source src="http://visiongpu20.csail.mit.edu:9000/61new.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+  
+        <button onclick="setPositionAndPlay(13)" type="button"> Start video </button>
+        <br>
+          <button onclick="toggleText('stateText')">What's inside the apartment</button>
+          <button onclick="toggleText('actionText')">Actions taken by Mary</button>
+          <div id="stateText" style="display:none;">There is a bedroom, kitchen, bathroom, and living room. <br>
+          In the bedroom, there is a coffee table and a desk. A remote control is on the coffee table. <br>
+          The kitchen contains four cabinets, a fridge, a kitchen table, a stove, and a microwave. The third cabinet, from left to right, is empty. The fridge contains a dish bowl, two plates, and a bottle of wine. The fourth cabinet, from left to right, has a water glass. The stove holds a salmon, two cupcakes, and a plate. The second cabinet, from left to right, has a condiment bottle. The microwave has a cupcake. The first cabinet, from left to right, is empty. <br>
+          The bathroom has a bathroom cabinet, which is empty. <br>
+          The living room has a coffee table, cabinet, desk, and sofa. The coffee table has a wine glass and a book. The cabinet contains chips, an apple, a water glass, two plates, a bottle of wine, two wine glasses, a condiment bottle, and a remote control. </div>
+          <div id="actionText" style="display:none;">Mary is in the bathroom. She then walks to the kitchen, heading towards the stove and opening it before closing it. She then moves to the second cabinet, opening and closing it, followed by the third cabinet. Finally, she approaches the first cabinet, ready to open it. </div>
+        <br>
+        <p>If Mary has been trying to get a wine, which one of the following statements is more likely to be true? <br>
+        (a) Mary thinks that the wine is inside the 1st kitchencabinet. <br>
+        (b) Mary thinks that the wine is not inside the 1st kitchencabinet.</p>
+      `, 
+      choices: ['a', 'b'],  
+      correct_response: 'a',
+      data: {type: 'trial2'}
+    };
+
+    /* if not all comprehension questions answered correctly */
+  var comprehensionCheck = {
+    timeline: [comprehension1, comprehension2, comprehension3],
+    loop_function: function(data) {
+      var responses = data.values();
+      console.log(responses);
+      var allCorrect = true;
+      
+      // Check if the response for comprehension1 is correct
+      if (responses[0].response != 1) {
+          allCorrect = false;
+      }
+      
+      // Check if the response for comprehension2 is correct
+      if (responses[1].response != 2) {
+          allCorrect = false;
+      }
+      
+      // Check if the response for comprehension3 is correct
+      if (responses[2].response != 0) {
+          allCorrect = false;
+      }
+      
+      if (!allCorrect) {
+        jsPsych.timeline.push(comprehensionIncorrect, function() {});
+      }
+  
+      return !allCorrect;  // if not all correct, loop the timeline
+  }
+  };
+  timeline.push(comprehensionCheck);
+  timeline.push(comprehensionCorrect, trial1, trial2);
+      
 
   /* Add a "Begin Experiment" button trial */
   var beginExperiment = {
@@ -205,68 +292,6 @@ async function initializeTimeline() {
     }
   };
   timeline.push(beginExperiment);
-
-  /* video and question trial */
-  var trial1 = {
-    // episode: 61  question type: 1.1  answer: a
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `
-      <video id="test" width="500" controls ontimeupdate="checkTime(this, 13)">
-        <source src="http://visiongpu20.csail.mit.edu:9000/61new.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video> 
-
-      <button onclick="setPositionAndPlay(0)" type="button"> Start video </button>
-      <br>
-        <button onclick="toggleText('stateText')">What's inside the apartment</button>
-        <button onclick="toggleText('actionText')">Actions taken by Mary</button>
-        <div id="stateText" style="display:none;">There is a bedroom, kitchen, bathroom, and living room. <br>
-        In the bedroom, there is a coffee table and a desk. A remote control is on the coffee table. <br>
-        The kitchen contains four cabinets, a fridge, a kitchen table, a stove, and a microwave. The third cabinet, from left to right, is empty. The fridge contains a dish bowl, two plates, and a bottle of wine. The fourth cabinet, from left to right, has a water glass. The stove holds a salmon, two cupcakes, and a plate. The second cabinet, from left to right, has a condiment bottle. The microwave has a cupcake. The first cabinet, from left to right, is empty. <br>
-        The bathroom has a bathroom cabinet, which is empty. <br>
-        The living room has a coffee table, cabinet, desk, and sofa. The coffee table has a wine glass and a book. The cabinet contains chips, an apple, a water glass, two plates, a bottle of wine, two wine glasses, a condiment bottle, and a remote control. </div>
-        <div id="actionText" style="display:none;">Mary is in the bathroom. She walks to the kitchen and heads towards the stove, preparing to open it. </div>
-      <br>
-      <p>If Mary has been trying to get a wine, which one of the following statements is more likely to be true?<br>
-      (a) Mary thinks that the wine is inside the stove. <br>
-      (b) Mary thinks that the wine is not inside the stove.
-      </p>
-    `,
-    choices: ['a', 'b'],
-    correct_response: 'a',
-    data: {type: 'trial1'}
-  };
-  timeline.push(trial1);
-
-  var trial2 = {
-    // episode: 61  question type: 1.2  answer: a
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `
-      <video id="test" width="500" controls ontimeupdate="checkTime(this,31)">
-        <source src="http://visiongpu20.csail.mit.edu:9000/61new.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-
-      <button onclick="setPositionAndPlay(13)" type="button"> Start video </button>
-      <br>
-        <button onclick="toggleText('stateText')">What's inside the apartment</button>
-        <button onclick="toggleText('actionText')">Actions taken by Mary</button>
-        <div id="stateText" style="display:none;">There is a bedroom, kitchen, bathroom, and living room. <br>
-        In the bedroom, there is a coffee table and a desk. A remote control is on the coffee table. <br>
-        The kitchen contains four cabinets, a fridge, a kitchen table, a stove, and a microwave. The third cabinet, from left to right, is empty. The fridge contains a dish bowl, two plates, and a bottle of wine. The fourth cabinet, from left to right, has a water glass. The stove holds a salmon, two cupcakes, and a plate. The second cabinet, from left to right, has a condiment bottle. The microwave has a cupcake. The first cabinet, from left to right, is empty. <br>
-        The bathroom has a bathroom cabinet, which is empty. <br>
-        The living room has a coffee table, cabinet, desk, and sofa. The coffee table has a wine glass and a book. The cabinet contains chips, an apple, a water glass, two plates, a bottle of wine, two wine glasses, a condiment bottle, and a remote control. </div>
-        <div id="actionText" style="display:none;">Mary is in the bathroom. She then walks to the kitchen, heading towards the stove and opening it before closing it. She then moves to the second cabinet, opening and closing it, followed by the third cabinet. Finally, she approaches the first cabinet, ready to open it. </div>
-      <br>
-      <p>If Mary has been trying to get a wine, which one of the following statements is more likely to be true? <br>
-      (a) Mary thinks that the wine is inside the 1st kitchencabinet. <br>
-      (b) Mary thinks that the wine is not inside the 1st kitchencabinet.</p>
-    `, 
-    choices: ['a', 'b'],  
-    correct_response: 'a',
-    data: {type: 'trial2'}
-  };
-  timeline.push(trial2);
 
 
   var vqa1 = {
@@ -545,7 +570,7 @@ async function initializeTimeline() {
   var finish = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
-    <p>You have completed the experiment. Please complete a short questionnaire</p>
+    <p>You have completed the experiment. Please complete a short questionnaire.</p>
     `,
     choices: ['Continue'],
     data: {type: 'finish'}
@@ -553,7 +578,17 @@ async function initializeTimeline() {
   timeline.push(finish);
 
   /* post questionnaire */
-  
+  var post_questionnaire = {
+    type: jsPsychSurveyText,
+    questions: [{prompt: "Gender", required: false},
+                {prompt: "Age", required: false},
+                {prompt: "What information did you use to answer the questions (video, what’s inside the apartment, actions taken by [name])?", required: false},
+                {prompt: "How did you answer the questions based on the information?", required: false},
+                {prompt: "Are there any other comments you would like to provide?", required: false},
+                {prompt: "Would you be willing to be invited back for a longer version of the experiment?", required: false}],
+    data: {type: 'post_questionnaire'}
+  };
+  timeline.push(post_questionnaire);
   
   /* define debrief */
   var debrief_block = {
